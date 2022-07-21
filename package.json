@@ -1,0 +1,32 @@
+{
+    "name": "solmate-pay",
+    "version": "0.0.1",
+    "description": "register a website and collect fees from customers",
+    "license": "Apache-2.0",
+    "main": "./dist/index.js",
+    "types": "./types/index.d.ts",
+    "scripts": {
+        "format": "npm run prettier -- --write",
+        "prettier": "prettier \"ts_src/**/*.ts\"  --ignore-path ./.prettierignore",
+        "test:anchor": "anchor test",
+        "test":"npm run test:anchor",
+        "build:anchor": "anchor build --verifiable && rm -rf ./ts_src/idl && mkdir ts_src/idl || true && cp ./target/idl/* ./ts_src/idl/",
+        "build": "npm run build:anchor && tsc"
+    },
+    "dependencies": {
+        "@project-serum/anchor": "^0.24.2",
+        "@solana/spl-token": "^0.2.0",
+        "@solana/wallet-adapter-base": "^0.9.5",
+        "@solana/wallet-adapter-react": "^0.15.5",
+        "@solana/wallet-adapter-wallets": "^0.16.1",
+        "@solana/web3.js": "^1.43.6",
+        "@types/chai": "^4.3.1"
+    },
+    "devDependencies": {
+        "@types/mocha": "^9.0.0",
+        "chai": "^4.3.6",
+        "mocha": "^9.0.3",
+        "ts-mocha": "^10.0.0",
+        "typescript": "^4.3.5"
+    }
+}
