@@ -140,12 +140,9 @@ export type SolmateCba = {
           "type": "u64"
         },
         {
-          "name": "grpcUrl",
+          "name": "address",
           "type": {
-            "array": [
-              "u8",
-              128
-            ]
+            "defined": "ProxyAddress"
           }
         }
       ],
@@ -185,12 +182,9 @@ export type SolmateCba = {
           "type": "u64"
         },
         {
-          "name": "grpcUrl",
+          "name": "address",
           "type": {
-            "array": [
-              "u8",
-              128
-            ]
+            "defined": "ProxyAddress"
           }
         }
       ],
@@ -498,12 +492,9 @@ export type SolmateCba = {
             }
           },
           {
-            "name": "grpcUrl",
+            "name": "address",
             "type": {
-              "array": [
-                "u8",
-                128
-              ]
+              "defined": "ProxyAddress"
             }
           },
           {
@@ -519,6 +510,26 @@ export type SolmateCba = {
     }
   ],
   "types": [
+    {
+      "name": "BidAuth",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "user",
+            "type": "publicKey"
+          },
+          {
+            "name": "start",
+            "type": "i64"
+          },
+          {
+            "name": "nonce",
+            "type": "i64"
+          }
+        ]
+      }
+    },
     {
       "name": "Bid",
       "type": {
@@ -576,6 +587,18 @@ export type SolmateCba = {
                 2
               ]
             }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProxyAddress",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "url",
+            "type": "bytes"
           }
         ]
       }
@@ -814,12 +837,9 @@ export const IDL: SolmateCba = {
           "type": "u64"
         },
         {
-          "name": "grpcUrl",
+          "name": "address",
           "type": {
-            "array": [
-              "u8",
-              128
-            ]
+            "defined": "ProxyAddress"
           }
         }
       ],
@@ -859,12 +879,9 @@ export const IDL: SolmateCba = {
           "type": "u64"
         },
         {
-          "name": "grpcUrl",
+          "name": "address",
           "type": {
-            "array": [
-              "u8",
-              128
-            ]
+            "defined": "ProxyAddress"
           }
         }
       ],
@@ -1172,12 +1189,9 @@ export const IDL: SolmateCba = {
             }
           },
           {
-            "name": "grpcUrl",
+            "name": "address",
             "type": {
-              "array": [
-                "u8",
-                128
-              ]
+              "defined": "ProxyAddress"
             }
           },
           {
@@ -1193,6 +1207,26 @@ export const IDL: SolmateCba = {
     }
   ],
   "types": [
+    {
+      "name": "BidAuth",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "user",
+            "type": "publicKey"
+          },
+          {
+            "name": "start",
+            "type": "i64"
+          },
+          {
+            "name": "nonce",
+            "type": "i64"
+          }
+        ]
+      }
+    },
     {
       "name": "Bid",
       "type": {
@@ -1250,6 +1284,18 @@ export const IDL: SolmateCba = {
                 2
               ]
             }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProxyAddress",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "url",
+            "type": "bytes"
           }
         ]
       }

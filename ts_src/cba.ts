@@ -112,6 +112,10 @@ export interface PeriodRing{
     length: number,
 }
 
+export interface ProxyAddress{
+    url: string;
+}
+
 interface PipelineData{
     controller: anchor.web3.PublicKey,
     validator: anchor.web3.PublicKey,
@@ -119,7 +123,7 @@ interface PipelineData{
     crankFeeRate: anchor.BN[],
     bandwidthDenominator: anchor.BN,
     totalDeposits: anchor.BN,
-    grpcConnection: GrpcConnection,
+    proxyAddress: ProxyAddress,
     periods: PeriodRing,
     bids: BidList,
 }
@@ -218,7 +222,9 @@ export class Pipeline{
             crankFeeRate: data.crankFeeRate,
             totalDeposits: data.totalDeposits,
             bandwidthDenominator: data.bandwidthDenominator,
-            grpcConnection:BufferToGrpcUrl(util.convertToBuffer(data.grpcUrl)),
+            proxyAddress:{
+                url: (data.address.url as Buffer).toString("utf-8"),
+            },
             periods: {
                 id: data.periods,
                 start: dataPeriods.start,
@@ -348,8 +354,19 @@ export class Pipeline{
 
 
     async refresh(){
+
+
+        const pipelineId=this.id;
         
         const fn=[];
+        
+        fn.push(async ()=>{
+            const data = await program.account.pipeline.fetch(pipelineId);
+            this._data.proxyAddress={
+                url: (data.address.url as Buffer).toString("utf-8"),
+            };
+        });
+
         fn.push(async ()=>{
             const dataController = await this.program.account.controller.fetch(this.controller_id());
             this._controller={
@@ -360,6 +377,8 @@ export class Pipeline{
                 //nextPeriodStart: dataController.nextPeriodStart,
             };
         });
+
+
         fn.push(async ()=>{
             const dataBids = await this.program.account.bidList.fetch(this.bid_id());
             
@@ -482,7 +501,9 @@ export async function AddValidator(
         //signerList.map((s)=>{
             //console.log(`key=${s.publicKey.toBase58()}`);
         //})
-        const sig = await program.methods.addValidator(crank_fee_rate[0],crank_fee_rate[1],util.convert(GrpcUrlToBuffer(grpcConnection))).accounts({
+        const sig = await program.methods.addValidator(crank_fee_rate[0],crank_fee_rate[1],{
+            url:Buffer.from(`${grpcConnection.ssl ? "ssl://":""}${grpcConnection.host}:${grpcConnection.port}`,"utf-8")
+        }).accounts({
             controller:controllerId,
             validatorPipeline: validatorId,
             pcMint: controller.pcMint,
@@ -490,7 +511,8 @@ export async function AddValidator(
             admin: admin.publicKey,
             bids:bidKP.publicKey,
             periods:periodKP.publicKey,
-            systemProgram,rent,
+            systemProgram,
+            rent,
         }).signers(signerList).rpc();
 
         
@@ -529,7 +551,7 @@ export function BufferToGrpcUrl(data: Buffer): GrpcConnection{
 }
 
 /**
- * format: [2;host.length][host][2;port][1;ssl]
+ * format: [1;host.length][host][2;port][1;ssl]
  * @param info 
  * @returns 
  */
